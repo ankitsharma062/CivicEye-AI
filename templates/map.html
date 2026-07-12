@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart City Map | CivicEye AI</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">🌍 CivicEye AI</div>
+
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/report">Report Issue</a></li>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/analytics">Analytics</a></li>
+            <li><a href="/map">Map</a></li>
+            <li><a href="/admin">Admin</a></li>
+            <li><a href="/login">Login</a></li>
+        </ul>
+
+    </nav>
+
+    <section class="hero">
+        <h1>Smart City Issue Map</h1>
+        <p>Track civic issues geographically.</p>
+    </section>
+
+    <section class="map-container">
+
+        <div class="analytics-card">
+            <h3>🔴 Pending</h3>
+            <h2 id="pendingCount">0</h2>
+        </div>
+
+        <div class="analytics-card">
+            <h3>🟡 In Progress</h3>
+            <h2 id="inProgressCount">0</h2>
+        </div>
+
+        <div class="analytics-card">
+            <h3>🟢 Resolved</h3>
+            <h2 id="resolvedCount">0</h2>
+        </div>
+
+        <div class="map-card">
+
+            <h2>📍 Interactive Map</h2>
+
+            <div id="map" style="
+                height:500px;
+                border-radius:15px;
+                margin-top:20px;
+            ">
+            </div>
+
+        </div>
+
+    </section>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+
+    <script>
+
+        // Create Map
+
+        const map =
+            L.map("map").setView(
+                [20.5937, 78.9629],
+                5
+            );
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution:
+                    "© OpenStreetMap"
+            }
+        ).addTo(map);
+
+
+        // Load Reports
+
+fetch("/get_reports")
+.then(response => response.json())
+.then(reports => {
+
+const pendingCount =
+    reports.filter(
+        report => report.status === "Pending"
+    ).length;
+
+const inProgressCount =
+    reports.filter(
+        report => report.status === "In Progress"
+    ).length;
+
+const resolvedCount =
+    reports.filter(
+        report => report.status === "Resolved"
+    ).length;
+
+        document.getElementById(
+            "pendingCount"
+        ).textContent =
+            pendingCount;
+
+        document.getElementById(
+            "inProgressCount"
+        ).textContent =
+            inProgressCount;
+
+        document.getElementById(
+            "resolvedCount"
+        ).textContent =
+            resolvedCount;
+
+        console.log(
+            "Reports Loaded:",
+            reports
+        );
+
+
+        // Heatmap + Auto Center
+
+        const heatPoints = [];
+
+        const markerGroup = [];
+
+
+        // Colored Markers
+
+        const redIcon =
+            new L.Icon({
+
+                iconUrl:
+                    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+
+                shadowUrl:
+                    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+
+                iconSize: [25, 41],
+
+                iconAnchor: [12, 41]
+
+            });
+
+        const orangeIcon =
+            new L.Icon({
+
+                iconUrl:
+                    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png",
+
+                shadowUrl:
+                    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+
+                iconSize: [25, 41],
+
+                iconAnchor: [12, 41]
+
+            });
+
+        const greenIcon =
+    new L.Icon({
+
+        iconUrl:
+            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
+
+        shadowUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+
+        iconSize: [25, 41],
+
+        iconAnchor: [12, 41]
+
+    });
+
+
+        // Add Markers
+
+        reports.forEach(report => {
+
+            if (!report.location)
+                return;
+
+            const coords =
+                report.location.split(",");
+
+            if (coords.length !== 2)
+                return;
+
+            const lat =
+                parseFloat(coords[0]);
+
+            const lng =
+                parseFloat(coords[1]);
+
+            if (
+                isNaN(lat) ||
+                isNaN(lng)
+            )
+                return;
+
+
+            // Heatmap Data
+
+            heatPoints.push([
+                lat,
+                lng,
+                1
+            ]);
+
+
+            // Marker Color
+
+            // Marker Color Based On Status
+
+let icon = redIcon;
+
+if (
+    report.status ===
+    "Pending"
+) {
+
+    icon = redIcon;
+
+}
+
+else if (
+    report.status ===
+    "In Progress"
+) {
+
+    icon = orangeIcon;
+
+}
+
+else if (
+    report.status ===
+    "Resolved"
+) {
+
+    icon = greenIcon;
+
+}
+
+
+            // Marker
+
+            L.marker(
+                [lat, lng],
+                { icon }
+            )
+
+                .addTo(map)
+
+                .bindPopup(
+                    `
+                    <b>${report.issue}</b>
+                    <br>
+                    Status: ${report.status}
+                    <br>
+                    ID: ${report.complaint_id}
+                    `
+                );
+
+            markerGroup.push([
+                lat,
+                lng
+            ]);
+
+        });
+
+
+        // Auto Center
+
+        if (
+            markerGroup.length > 0
+        ) {
+
+            map.fitBounds(
+                markerGroup
+            );
+
+        }
+
+
+        // Heat Layer
+
+        L.heatLayer(
+    heatPoints,
+    {
+        radius: 25,
+        blur: 15,
+        maxZoom: 17
+    }
+).addTo(map);
+
+fetch("/heatmap_data")
+.then(response => response.json())
+.then(data => {
+
+    data.forEach(item => {
+
+        if (!item.location.includes(","))
+            return;
+
+        const coords =
+            item.location.split(",");
+
+        const lat =
+            parseFloat(coords[0]);
+
+        const lng =
+            parseFloat(coords[1]);
+
+        if (
+            isNaN(lat) ||
+            isNaN(lng)
+        )
+            return;
+
+        if (item.total >= 2) {
+
+            L.circle(
+                [lat, lng],
+                {
+                    radius: item.total * 30,
+                    fillOpacity: 0.4
+                }
+            )
+            .addTo(map)
+            .bindPopup(
+                `🔥 Hotspot<br>
+                 Complaints: ${item.total}`
+            );
+
+        }
+
+    });
+
+});
+
+});
+
+    </script>
+
+</body>
+
+</html>

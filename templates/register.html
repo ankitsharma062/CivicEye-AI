@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicEye AI | Create Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <!-- Left Side -->
+        <div class="auth-left">
+
+            <div>
+                <h1>🌍 CivicEye AI</h1>
+
+                <h2>Join the Movement for Smarter Cities</h2>
+
+                <p>
+                    Become part of a growing community helping improve
+                    urban environments through technology, citizen participation,
+                    and AI-powered civic monitoring.
+                </p>
+
+                <div class="auth-features">
+                    <p>✓ Report Civic Issues Instantly</p>
+                    <p>✓ AI-Based Issue Detection</p>
+                    <p>✓ Real-Time Complaint Tracking</p>
+                    <p>✓ Environmental Impact Monitoring</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Side -->
+        <div class="auth-right">
+
+            <div class="auth-card">
+
+                <h2>Create Account</h2>
+
+                <p class="auth-subtitle">
+                    Start contributing to a cleaner and smarter community
+                </p>
+
+                <form>
+
+                    <input type="text" id="fullName" placeholder="Full Name" required>
+
+                    <input type="email" id="email" placeholder="Email Address" required>
+
+                    <input type="tel" id="phone" placeholder="Phone Number" required>
+
+                    <input type="password" id="password" placeholder="Password" required>
+
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+
+                    <button type="button" id="registerBtn">
+                        Create Account
+                    </button>
+
+                    <div id="registerMessage"></div>
+
+                </form>
+
+                <div class="auth-links">
+
+                    <p>
+                        Already have an account?
+                        <a href="/login">
+                            Sign In
+                        </a>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        document
+            .getElementById("registerBtn")
+            .addEventListener("click", () => {
+
+                const fullName =
+                    document.getElementById("fullName").value;
+
+                const email =
+                    document.getElementById("email").value;
+
+                const phone =
+                    document.getElementById("phone").value;
+
+                const password =
+                    document.getElementById("password").value;
+
+                const confirmPassword =
+                    document.getElementById("confirmPassword").value;
+
+                if (password !== confirmPassword) {
+
+                    document.getElementById(
+                        "registerMessage"
+                    ).innerHTML =
+                        "Passwords do not match";
+
+                    return;
+                }
+
+                fetch("/register_user", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        full_name: fullName,
+                        email: email,
+                        phone: phone,
+                        password: password
+
+                    })
+
+                })
+
+                    .then(response => response.json())
+
+                    .then(data => {
+
+                        document.getElementById(
+                            "registerMessage"
+                        ).innerHTML = data.message;
+
+                        if (data.message === "Email already exists. Please sign in.") {
+
+                            alert(data.message);
+
+                            window.location.href = "/login";
+                        }
+
+                        if (data.message === "Registration Successful") {
+
+                            alert("Registration Successful. Please Sign In.");
+
+                            window.location.href = "/login";
+                        }
+
+                    });
+
+            });
+
+    </script>
+
+</body>
+
+</html>

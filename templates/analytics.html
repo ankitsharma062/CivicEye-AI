@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics | CivicEye AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">🌍 CivicEye AI</div>
+
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/report">Report Issue</a></li>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/analytics">Analytics</a></li>
+            <li><a href="/map">Map</a></li>
+            <li><a href="/admin">Admin</a></li>
+            <li><a href="/login">Login</a></li>
+        </ul>
+
+    </nav>
+
+    <section class="hero">
+        <h1>Analytics Center</h1>
+        <p>Insights and trends from community reports.</p>
+    </section>
+
+    <section class="analytics-container">
+
+        <div class="analytics-grid">
+
+            <div class="analytics-card">
+                <h3>🗑 Garbage Reports</h3>
+                <h2 id="garbageCount">0</h2>
+            </div>
+
+            <div class="analytics-card">
+                <h3>🕳 Potholes</h3>
+                <h2 id="potholeCount">0</h2>
+            </div>
+
+            <div class="analytics-card">
+                <h3>🌊 Drainage Issues</h3>
+                <h2 id="drainCount">0</h2>
+            </div>
+
+            <div class="analytics-card">
+                <h3>🌱 Resolution Rate</h3>
+                <h2 id="resolutionRate">0%</h2>
+            </div>
+
+        </div>
+
+        <div class="analytics-grid">
+
+            <div class="analytics-card">
+                <h3>🤖 AI Verified</h3>
+                <h2 id="aiVerified">0</h2>
+            </div>
+
+            <div class="analytics-card">
+                <h3>⚠️ Human Review</h3>
+                <h2 id="humanReview">0</h2>
+            </div>
+
+            <div class="analytics-card">
+                <h3>🎯 Avg Confidence</h3>
+                <h2 id="avgConfidence">0%</h2>
+            </div>
+
+            <div class="analytics-card">
+                <h3>📊 Most Common Issue</h3>
+                <h2 id="commonIssue">-</h2>
+            </div>
+
+        </div>
+
+        <div class="analytics-grid">
+
+    <div class="analytics-card">
+        <h3>🔥 Top Issue</h3>
+        <h2 id="topIssue">-</h2>
+    </div>
+
+    <div class="analytics-card">
+        <h3>👮 Top Officer</h3>
+        <h2 id="topOfficer">-</h2>
+    </div>
+
+    <div class="analytics-card">
+        <h3>🚨 High Priority</h3>
+        <h2 id="highPriority">0</h2>
+    </div>
+
+    <div class="analytics-card">
+        <h3>🔮 Predictive Insight</h3>
+        <h2 id="predictionCard">Loading...</h2>
+    </div>
+
+</div>
+
+        <div class="chart-card">
+            <h3>Issue Distribution</h3>
+            <canvas id="issueChart" height="220"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3>Report Status Distribution</h3>
+            <canvas id="statusChart" height="220"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3>📈 Report Trends</h3>
+            <canvas id="trendChart" height="220"></canvas>
+        </div>
+
+        <div class="chart-card">
+            <h3>Environmental Impact</h3>
+            <div class="chart-placeholder">
+                ♻️ <span id="impactCount">0</span> Issues Successfully Resolved
+            </div>
+        </div>
+
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        fetch("/get_reports")
+            .then(response => response.json())
+            .then(reports => {
+
+                const dateCounts = {};
+
+                reports.forEach(report => {
+
+                    const date =
+                        report.date;
+
+                    if (!dateCounts[date]) {
+
+                        dateCounts[date] = 0;
+
+                    }
+
+                    dateCounts[date]++;
+
+                });
+
+
+                const garbage =
+                    reports.filter(
+                        report => report.issue === "Garbage Dump"
+                    ).length;
+
+                const pothole =
+                    reports.filter(
+                        report => report.issue === "Pothole"
+                    ).length;
+
+                const drain =
+                    reports.filter(
+                        report => report.issue === "Drainage Overflow"
+                    ).length;
+
+                document.getElementById(
+                    "garbageCount"
+                ).textContent = garbage;
+
+                document.getElementById(
+                    "potholeCount"
+                ).textContent = pothole;
+
+                document.getElementById(
+                    "drainCount"
+                ).textContent = drain;
+
+                const resolved =
+                    reports.filter(
+                        report => report.status === "Resolved"
+                    ).length;
+
+                const pending =
+                    reports.filter(
+                        report => report.status === "Pending"
+                    ).length;
+
+                const inProgress =
+                    reports.filter(
+                        report => report.status === "In Progress"
+                    ).length;
+
+                const resolutionRate =
+                    reports.length === 0
+                        ? 0
+                        : Math.round(
+                            (resolved / reports.length) * 100
+                        );
+
+                document.getElementById(
+                    "resolutionRate"
+                ).textContent =
+                    resolutionRate + "%";
+
+                document.getElementById(
+                    "impactCount"
+                ).textContent =
+                    resolved;
+
+                const ctx =
+                    document.getElementById(
+                        "issueChart"
+                    );
+
+                new Chart(ctx, {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    type: "bar",
+
+                    data: {
+
+                        labels: [
+                            "Garbage",
+                            "Pothole",
+                            "Drainage"
+                        ],
+
+                        datasets: [{
+
+                            label:
+                                "Number of Reports",
+
+                            data: [
+                                garbage,
+                                pothole,
+                                drain
+                            ]
+
+                        }]
+
+                    }
+
+                });
+
+
+                const statusCtx =
+                    document.getElementById(
+                        "statusChart"
+                    );
+
+                new Chart(statusCtx, {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    type: "pie",
+
+                    data: {
+
+                        labels: [
+                            "Pending",
+                            "In Progress",
+                            "Resolved"
+                        ],
+
+                        datasets: [{
+
+                            data: [
+                                pending,
+                                inProgress,
+                                resolved
+                            ]
+
+                        }]
+
+                    }
+
+                });
+
+                const trendCtx =
+                    document.getElementById(
+                        "trendChart"
+                    );
+
+                new Chart(trendCtx, {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    type: "line",
+
+                    data: {
+
+                        labels:
+                            Object.keys(dateCounts),
+
+                        datasets: [{
+
+                            label:
+                                "Reports",
+
+                            data:
+                                Object.values(dateCounts)
+
+                        }]
+
+                    }
+
+                });
+
+                // AI Dashboard
+
+                const aiVerified =
+                    reports.filter(
+                        r => r.verification_status === "AI Verified"
+                    ).length;
+
+                const humanReview =
+                    reports.filter(
+                        r => r.verification_status !== "AI Verified"
+                    ).length;
+
+                const confidenceReports =
+                    reports.filter(
+                        r => r.ai_confidence !== null
+                    );
+
+                const avgConfidence =
+                    confidenceReports.length
+                        ?
+                        (
+                            confidenceReports.reduce(
+                                (sum, r) => sum + r.ai_confidence,
+                                0
+                            )
+                            /
+                            confidenceReports.length
+                        ).toFixed(1)
+                        :
+                        0;
+
+                const issueCount = {};
+
+                reports.forEach(r => {
+
+                    issueCount[r.issue] =
+                        (issueCount[r.issue] || 0) + 1;
+
+                });
+
+                const commonIssue =
+                    Object.keys(issueCount)
+                        .reduce(
+                            (a, b) =>
+                                issueCount[a] > issueCount[b]
+                                    ? a
+                                    : b
+                        );
+
+                document.getElementById("aiVerified")
+                    .textContent = aiVerified;
+
+                document.getElementById("humanReview")
+                    .textContent = humanReview;
+
+                document.getElementById("avgConfidence")
+                    .textContent = avgConfidence + "%";
+
+                document.getElementById("commonIssue")
+                    .textContent = commonIssue;
+
+            });
+
+
+
+        fetch("/advanced_analytics")
+            .then(response => response.json())
+            .then(data => {
+
+                document.getElementById("topIssue").textContent =
+                    data.issues.length > 0
+                        ? data.issues[0].issue + " (" + data.issues[0].total + ")"
+                        : "-";
+
+                document.getElementById("topOfficer").textContent =
+                    data.officers.length > 0
+                        ? data.officers[0].assigned_officer + " (" + data.officers[0].total + ")"
+                        : "-";
+
+                const highPriority =
+                    data.priorities.find(
+                        p => p.priority === "High"
+                    );
+
+                document.getElementById("highPriority").textContent =
+                    highPriority
+                        ? highPriority.total
+                        : 0;
+
+            });
+
+
+        fetch("/predictive_insights")
+        .then(response => response.json())
+        .then(data => {
+
+            document.getElementById(
+                "predictionCard"
+            ).textContent =
+                data.prediction;
+
+});
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CivicEye AI | Track Complaint</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🌍 CivicEye AI
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/report">Report Issue</a></li>
+        <li><a href="/track">Track Complaint</a></li>
+        <li><a href="/profile">Profile</a></li>
+    </ul>
+
+</nav>
+
+<div class="container">
+
+    <h1>🔍 Track Complaint</h1>
+
+    <input
+        type="text"
+        id="complaintId"
+        placeholder="Enter Complaint ID">
+
+    <button onclick="trackComplaint()">
+        Search
+    </button>
+
+    <div id="result"></div>
+
+</div>
+
+<script>
+
+function trackComplaint(){
+
+    const id =
+        document.getElementById(
+            "complaintId"
+        ).value;
+
+    fetch("/track_complaint/" + id)
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        if(data.message){
+
+            document.getElementById(
+                "result"
+            ).innerHTML =
+            "<h3>Complaint Not Found</h3>";
+
+            return;
+        }
+
+        document.getElementById(
+            "result"
+        ).innerHTML = `
+
+        <div class="dashboard-card">
+
+            <h3>${data.complaint_id}</h3>
+
+            <p><b>Issue:</b> ${data.issue}</p>
+
+            <p><b>Location:</b> ${data.location}</p>
+
+            <p><b>Status:</b> ${data.status}</p>
+
+            <p><b>Date:</b> ${data.date}</p>
+
+            <p><b>AI Prediction:</b> ${data.ai_prediction}</p>
+
+        </div>
+        `;
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>

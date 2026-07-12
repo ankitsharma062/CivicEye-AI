@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | CivicEye AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">🌍 CivicEye AI</div>
+
+        <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/report">Report Issue</a></li>
+    <li><a href="/dashboard">Dashboard</a></li>
+    <li><a href="/analytics">Analytics</a></li>
+    <li><a href="/map">Map</a></li>
+    <li><a href="/admin">Admin</a></li>
+    <li><a href="/login">Login</a></li>
+</ul>
+    </nav>
+
+    <!-- Header -->
+    <section class="hero">
+        <h1>Civic Analytics Dashboard</h1>
+        <p>Monitor civic issues, AI detection results and community impact.</p>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+
+        <div class="card">
+            <h2 id="totalReports">0</h2>
+            <p>Total Reports</p>
+        </div>
+
+        <div class="card">
+            <h2 id="pendingReports">0</h2>
+            <p>Pending</p>
+        </div>
+
+        <div class="card">
+            <h2 id="resolvedReports">0</h2>
+            <p>Resolved</p>
+        </div>
+
+        <div class="card">
+            <h2>95%</h2>
+            <p>AI Accuracy</p>
+        </div>
+
+    </section>
+
+    <!-- Recent Reports -->
+    <section class="dashboard-section">
+
+        <h2>Recent Reports</h2>
+
+        <table class="report-table">
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Issue</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="reportTableBody">
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <!-- AI Insights -->
+    <section class="dashboard-cards">
+
+        <div class="dashboard-card">
+            <h3>🤖 Most Detected Issue</h3>
+            <p id="mostDetectedIssue">Loading...</p>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>🌱 Environmental Impact</h3>
+            <p id="environmentImpact">0 issues resolved</p>
+        </div>
+
+    </section>
+
+    <footer>
+        <p>© 2026 CivicEye AI</p>
+    </footer>
+
+    <script>
+
+fetch("/get_reports")
+.then(response => response.json())
+.then(reports => {
+
+    const reportTableBody =
+        document.getElementById("reportTableBody");
+
+    const pendingReports =
+        document.getElementById("pendingReports");
+
+    const totalReports =
+        document.getElementById("totalReports");
+
+    const resolvedReports =
+        document.getElementById("resolvedReports");
+
+
+    totalReports.textContent =
+        reports.length;
+
+    pendingReports.textContent =
+        reports.filter(
+            report => report.status === "Pending"
+        ).length;
+
+    resolvedReports.textContent =
+        reports.filter(
+            report => report.status === "Resolved"
+        ).length;
+
+
+    document.getElementById(
+        "environmentImpact"
+    ).textContent =
+        resolvedReports.textContent +
+        " issues resolved";
+
+
+    const issueCount = {};
+
+    reports.forEach(report => {
+
+        if (!issueCount[report.issue]) {
+
+            issueCount[report.issue] = 0;
+
+        }
+
+        issueCount[report.issue]++;
+
+    });
+
+    let mostDetectedIssue =
+        "No Reports";
+
+    let maxCount = 0;
+
+    for (let issue in issueCount) {
+
+        if (issueCount[issue] > maxCount) {
+
+            maxCount =
+                issueCount[issue];
+
+            mostDetectedIssue =
+                issue;
+
+        }
+
+    }
+
+    document.getElementById(
+        "mostDetectedIssue"
+    ).textContent =
+        mostDetectedIssue;
+
+
+    reports.slice().reverse().forEach(report => {
+
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML =
+        `
+        <td>${report.complaint_id}</td>
+        <td>${report.issue}</td>
+        <td>${report.location}</td>
+        <td>${report.status}</td>
+        <td>${report.date}</td>
+        <td>--</td>
+        `;
+
+        reportTableBody.appendChild(row);
+
+    });
+
+});
+
+</script>
+
+</body>
+
+</html>

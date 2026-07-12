@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | CivicEye AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">🌍 CivicEye AI</div>
+
+    <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/report">Report Issue</a></li>
+    <li><a href="/dashboard">Dashboard</a></li>
+    <li><a href="/analytics">Analytics</a></li>
+    <li><a href="/map">Map</a></li>
+    <li><a href="/admin">Admin</a></li>
+    <li><a href="/login">Login</a></li>
+</ul>
+</nav>
+
+<section class="hero">
+    <h1>Admin Control Center</h1>
+    <div class="analytics-grid">
+
+    <p>Manage civic reports and monitor city-wide activity.</p>
+</section>
+
+<section class="admin-container">
+
+    <div class="analytics-grid">
+
+    <div class="analytics-card">
+        <h3>Total Reports</h3>
+        <h2 id="govTotal">0</h2>
+    </div>
+
+    <div class="analytics-card">
+        <h3>Resolved</h3>
+        <h2 id="govResolved">0</h2>
+    </div>
+
+    <div class="analytics-card">
+        <h3>Pending</h3>
+        <h2 id="govPending">0</h2>
+    </div>
+
+    <div class="analytics-card">
+        <h3>⚠ Smart Alerts</h3>
+        <h2 id="overdueAlerts">Loading...</h2>
+    </div>
+
+</div>
+
+
+    <div class="admin-stats">
+        <div class="admin-stat-card">
+            <h2 id="adminTotalReports">0</h2>
+            <p>Total Reports</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h2 id="adminPendingReports">0</h2>
+            <p>Pending</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h2 id="adminInProgressReports">0</h2>
+            <p>In Progress</p>
+        </div>
+
+        <div class="admin-stat-card">
+            <h2 id="adminResolvedReports">0</h2>
+            <p>Resolved</p>
+        </div>
+    </div>
+
+    <div class="search-panel">
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search reports..."
+        onkeyup="searchReports()">
+
+    <select id="statusFilter" onchange="filterReports()">
+        <option value="All">All Status</option>
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Resolved">Resolved</option>
+    </select>
+
+    <select id="issueFilter" onchange="filterReports()">
+        <option value="All">All Issues</option>
+        <option value="Garbage Dump">Garbage Dump</option>
+        <option value="Pothole">Pothole</option>
+        <option value="Drainage Overflow">Drainage Overflow</option>
+    </select>
+
+</div>
+
+    <div class="table-card">
+
+        <h2>Recent Reports</h2>
+
+        <table class="modern-table">
+
+    <thead>
+        <tr>
+    <th>ID</th>
+    <th>Image</th>
+    <th>Issue</th>
+    <th>Location</th>
+    <th>Status</th>
+    <th>AI Prediction</th>
+    <th>Confidence</th>
+    <th>Verification</th>
+    <th>Actions</th>
+</tr>
+    </thead>
+
+    <tbody id="adminTableBody">
+
+    </tbody>
+
+</table>
+
+    </div>
+
+</section>
+
+<script>
+
+fetch("/admin_data")
+.then(response => response.json())
+.then(data => {
+
+    console.log("Admin Data:", data);
+
+    document.getElementById(
+        "adminTotalReports"
+    ).textContent =
+        data.total_reports;
+
+    document.getElementById(
+        "adminTotalReports"
+    ).textContent =
+        data.total_reports;
+
+    document.getElementById(
+        "adminPendingReports"
+    ).textContent =
+        data.pending_reports;
+
+    document.getElementById(
+        "adminInProgressReports"
+    ).textContent =
+        data.inprogress_reports;
+
+    document.getElementById(
+        "adminResolvedReports"
+    ).textContent =
+        data.resolved_reports;
+
+
+    const tableBody =
+        document.getElementById(
+            "adminTableBody"
+        );
+
+    data.reports
+        .slice()
+        .reverse()
+        .forEach(report => {
+
+            const row =
+                document.createElement("tr");
+
+            row.innerHTML = `
+    <td>${report.complaint_id}</td>
+
+    <td>
+        ${
+            report.image_path
+            ? `<img
+                src="/static/${report.image_path}"
+                width="80"
+                height="80"
+                style="
+                    object-fit:cover;
+                    border-radius:8px;
+                ">`
+            : "No Image"
+        }
+    </td>
+
+    <td>${report.issue}</td>
+
+    <td>${report.location}</td>
+
+    <td>${report.status}</td>
+
+    <td>${report.ai_prediction || "N/A"}</td>
+
+    <td>${report.ai_confidence || 0}%</td>
+
+    <td>${report.verification_status || "N/A"}</td>
+
+    <td>
+
+<button
+    onclick="updateStatus('${report.complaint_id}','Pending')"
+    title="Pending"
+    style="
+        background:#e53935;
+        color:white;
+        border:none;
+        padding:6px 10px;
+        border-radius:6px;
+        cursor:pointer;
+        margin:2px;
+    ">
+    🔴
+</button>
+
+<button
+    onclick="updateStatus('${report.complaint_id}','In Progress')"
+    title="In Progress"
+    style="
+        background:#fb8c00;
+        color:white;
+        border:none;
+        padding:6px 10px;
+        border-radius:6px;
+        cursor:pointer;
+        margin:2px;
+    ">
+    🟠
+</button>
+
+<button
+    onclick="updateStatus('${report.complaint_id}','Resolved')"
+    title="Resolved"
+    style="
+        background:#43a047;
+        color:white;
+        border:none;
+        padding:6px 10px;
+        border-radius:6px;
+        cursor:pointer;
+        margin:2px;
+    ">
+    🟢
+</button>
+
+<button
+    onclick="deleteReport('${report.complaint_id}')"
+    title="Delete Report"
+    style="
+        background:#212121;
+        color:white;
+        border:none;
+        padding:6px 10px;
+        border-radius:6px;
+        cursor:pointer;
+        margin:2px;
+    ">
+    🗑️
+</button>
+
+<select
+    onchange="assignOfficer(
+        '${report.complaint_id}',
+        this.value
+    )"
+>
+    <option value="">
+        Assign Officer
+    </option>
+
+    <option value="Road Officer">
+        Road Officer
+    </option>
+
+    <option value="Sanitation Officer">
+        Sanitation Officer
+    </option>
+
+    <option value="Drainage Officer">
+        Drainage Officer
+    </option>
+</select>
+
+</td>
+`;
+
+            tableBody.appendChild(row);
+
+        });
+
+});
+
+function updateStatus(id, status) {
+
+    fetch("/update_status", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            complaint_id: id,
+            status: status
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        alert(data.message);
+
+        location.reload();
+
+    });
+
+}
+
+
+function deleteReport(id) {
+
+    if (!confirm("Delete this report?")) {
+
+        return;
+
+    }
+
+    fetch("/delete_report", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            complaint_id: id
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        alert(data.message);
+
+        location.reload();
+
+    });
+
+}
+
+function searchReports() {
+
+    const input = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    const rows = document.querySelectorAll("#adminTableBody tr");
+
+    rows.forEach(row => {
+
+        const text = row.textContent.toLowerCase();
+
+        if (text.includes(input)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+
+    });
+}
+
+function filterReports() {
+
+    const statusFilter =
+        document.getElementById("statusFilter").value;
+
+    const issueFilter =
+        document.getElementById("issueFilter").value;
+
+    const rows =
+        document.querySelectorAll("#adminTableBody tr");
+
+    rows.forEach(row => {
+
+        const rowText =
+            row.textContent;
+
+        const statusMatch =
+            statusFilter === "All" ||
+            rowText.includes(statusFilter);
+
+        const issueMatch =
+            issueFilter === "All" ||
+            rowText.includes(issueFilter);
+
+        if (statusMatch && issueMatch) {
+
+            row.style.display = "";
+
+        } else {
+
+            row.style.display = "none";
+
+        }
+
+    });
+
+}
+
+function assignOfficer(
+    complaintId,
+    officer
+){
+
+    fetch(
+        "/assign_officer",
+        {
+            method:"POST",
+
+            headers:{
+                "Content-Type":
+                "application/json"
+            },
+
+            body:JSON.stringify({
+
+                complaint_id:
+                    complaintId,
+
+                officer:
+                    officer
+
+            })
+        }
+    )
+
+    .then(response =>
+        response.json()
+    )
+
+    .then(data => {
+
+        alert(
+            data.message
+        );
+
+    });
+
+}
+
+fetch("/government_summary")
+.then(response => response.json())
+.then(data => {
+
+    document.getElementById(
+        "govTotal"
+    ).textContent =
+        data.total_reports;
+
+    document.getElementById(
+        "govResolved"
+    ).textContent =
+        data.resolved;
+
+    document.getElementById(
+        "govPending"
+    ).textContent =
+        data.pending;
+
+});
+
+fetch("/overdue_complaints")
+.then(response => response.json())
+.then(data => {
+
+    const unresolved =
+        data.filter(
+            r => r.status !== "Resolved"
+        ).length;
+
+    document.getElementById(
+        "overdueAlerts"
+    ).textContent =
+        unresolved +
+        " Unresolved Complaints";
+
+});
+
+</script>
+
+</body>
+</html>

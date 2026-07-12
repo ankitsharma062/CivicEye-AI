@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Reports</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<h1>📋 My Reports</h1>
+
+<div id="reports"></div>
+
+<script>
+
+fetch("/my_reports_data")
+
+.then(response => response.json())
+
+.then(data => {
+
+    let html = "";
+
+    data.forEach(report => {
+
+        html += `
+        <div class="dashboard-card">
+
+            <h3>${report.complaint_id}</h3>
+
+            <p><b>Issue:</b> ${report.issue}</p>
+
+            <p><b>Status:</b> ${report.status}</p>
+
+            <p><b>Location:</b> ${report.location}</p>
+
+        </div>
+        `;
+    });
+
+    document.getElementById(
+        "reports"
+    ).innerHTML = html;
+
+});
+
+</script>
+
+</body>
+</html>

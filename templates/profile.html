@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicEye AI | Profile</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+
+    <div class="logo">
+        🌍 CivicEye AI
+    </div>
+
+    <ul class="nav-links">
+
+        <li><a href="/">Home</a></li>
+        <li><a href="/report">Report Issue</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/analytics">Analytics</a></li>
+        <li><a href="/map">Map</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/admin">Admin</a></li>
+        <li><a href="/logout">Logout</a></li>
+
+    </ul>
+
+</nav>
+
+<!-- Profile Section -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>👤 My Profile</h1>
+
+        <p>
+            Manage your CivicEye AI account information.
+        </p>
+
+    </div>
+
+</section>
+
+<div class="container">
+
+    <div class="dashboard-card">
+
+        <h2>User Information</h2>
+
+        <p>
+            <strong>Full Name:</strong>
+            {{ user.full_name }}
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            {{ user.email }}
+        </p>
+
+        <p>
+            <strong>Phone:</strong>
+            {{ user.phone }}
+        </p>
+
+        <p>
+            <strong>Role:</strong>
+            {{ user.role }}
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

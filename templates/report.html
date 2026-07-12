@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Issue | CivicEye AI</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">🌍 CivicEye AI</div>
+
+        <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/report">Report Issue</a></li>
+    <li><a href="/dashboard">Dashboard</a></li>
+    <li><a href="/analytics">Analytics</a></li>
+    <li><a href="/map">Map</a></li>
+    <li><a href="/admin">Admin</a></li>
+    <li><a href="/login">Login</a></li>
+</ul>
+    </nav>
+
+    <!-- Header -->
+    <section class="hero">
+        <h1>Report a Civic Issue</h1>
+        <p>
+            Help create cleaner, safer, and smarter communities.
+            Upload evidence and let AI assist authorities in taking action.
+        </p>
+    </section>
+
+    <!-- Main Form -->
+    <section class="report-section">
+
+        <div class="report-card">
+
+            <div class="form-header">
+                <h2>📸 Submit New Report</h2>
+                <p>Provide details about the issue.</p>
+            </div>
+
+            <form>
+
+                <div class="form-group">
+                    <label>Issue Category</label>
+                    <select id="issueCategory">
+                        <option>Select Issue</option>
+                        <option>Garbage Dump</option>
+                        <option>Pothole</option>
+                        <option>Drainage Overflow</option>
+                    </select> 
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                
+                    <input type="text" id="location" placeholder="Enter location or GPS coordinates">
+                
+                    <button type="button" id="gpsBtn" style="margin-top:10px;">
+                
+                        📍 Use My Location
+                
+                    </button>
+                
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea rows="5" id="description" placeholder="Describe the issue in detail..."></textarea>
+                </div>
+
+                <p id="charCount">0 / 300 characters</p>
+
+                <div class="form-group">
+
+                    <label>Upload Image / Video</label>
+
+                    <input type="file" id="imageUpload" accept="image/*,video/*">
+
+                    <div id="previewContainer" style="
+            display:none;
+            position:relative;
+            margin-top:10px;
+            width:300px;">
+
+                        <button id="removeImage" type="button" style="
+                position:absolute;
+                top:5px;
+                right:5px;
+                width:28px;
+                height:28px;
+                border:none;
+                border-radius:50%;
+                cursor:pointer;
+                font-weight:bold;">
+                            ✖
+                        </button>
+
+                        <img id="previewImage" width="300" style="border-radius:8px;">
+
+                    </div>
+
+                </div>
+
+                <div class="upload-box">
+                    <h3>🤖 AI Analysis Preview</h3>
+                    <p>
+                        Upload an image to detect:
+                        Garbage, Potholes, Drain Overflow,
+                        Water Logging and more.
+                    </p>
+
+                    <div id="predictionResult" style="
+                         margin-top:15px;
+                         padding:10px;
+                         background:#f5f5f5;
+                         border-radius:8px;
+                         font-weight:bold;">
+                    </div>
+
+                </div>
+
+                <button class="submit-btn" id="submitBtn" type="button">
+
+                    🚀 Submit Report
+
+                </button>
+
+                <div id="successMessage"></div>
+
+            </form>
+
+        </div>
+
+        <!-- Right Side -->
+        <div class="info-panel">
+
+            <div class="info-card">
+                <h3>⚡ Fast Reporting</h3>
+                <p>
+                    Submit issues within seconds.
+                </p>
+            </div>
+
+            <div class="info-card">
+                <h3>🤖 AI Detection</h3>
+                <p>
+                    Automatically classify civic problems.
+                </p>
+            </div>
+
+            <div class="info-card">
+                <h3>📍 Smart Mapping</h3>
+                <p>
+                    Pinpoint issue locations accurately.
+                </p>
+            </div>
+
+            <div class="info-card">
+                <h3>📊 Live Tracking</h3>
+                <p>
+                    Monitor progress and resolutions.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer>
+        <p>© 2026 CivicEye AI | AI for Sustainable Communities</p>
+    </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

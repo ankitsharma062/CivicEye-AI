@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicEye AI | Sign In</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="auth-container">
+
+    <!-- Left Side -->
+    <div class="auth-left">
+        <div>
+            <h1>🌍 CivicEye AI</h1>
+
+            <h2>Building Smarter Cities Through Citizen Action</h2>
+
+            <p>
+                Report civic issues, track resolutions,
+                and help create cleaner, safer communities
+                powered by AI.
+            </p>
+
+            <div class="auth-features">
+                <p>✓ AI-Powered Issue Detection</p>
+                <p>✓ Real-Time Tracking</p>
+                <p>✓ Smart City Analytics</p>
+                <p>✓ Environmental Impact Monitoring</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side -->
+    <div class="auth-right">
+
+        <div class="auth-card">
+
+            <h2>Welcome Back</h2>
+
+            <p class="auth-subtitle">
+                Sign in to your CivicEye AI account
+            </p>
+
+            <form>
+
+                <input
+    type="email"
+    id="loginEmail"
+    placeholder="Email address"
+    required>
+
+<input
+    type="password"
+    id="loginPassword"
+    placeholder="Password"
+    required>
+
+<button
+    type="button"
+    id="loginBtn">
+    Sign In
+</button>
+
+<div id="loginMessage"></div>
+
+            </form>
+
+            <div class="auth-links">
+
+                <a href="#">Forgot Password?</a>
+
+                <p>
+                    New here?
+                    <a href="register.html">
+                        Create Account
+                    </a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+document
+.getElementById("loginBtn")
+.addEventListener("click", () => {
+
+    const email =
+        document.getElementById("loginEmail").value;
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    fetch("/login_user", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            email: email,
+            password: password
+
+        })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        document.getElementById(
+            "loginMessage"
+        ).innerHTML =
+            data.message;
+
+        if(data.success){
+
+    alert("Login Successful");
+
+    window.location.href = "/";
+}
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>

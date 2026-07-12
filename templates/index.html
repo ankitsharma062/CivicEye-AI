@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicEye AI | Smart Civic Issue Reporting</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    
+    <nav class="navbar">
+        <div class="logo">🌍 CivicEye AI</div>
+
+        <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/report">Report Issue</a></li>
+    <li><a href="/dashboard">Dashboard</a></li>
+    <li><a href="/analytics">Analytics</a></li>
+    <li><a href="/map">Map</a></li>
+    <li><a href="/admin">Admin</a></li>
+    <li><a href="/login">Login</a></li>
+    <li><a href="/register">Register</a></li>
+    <li><a href="/profile">Profile</a></li>
+    <li><a href="/track">Track Complaint</a></li>
+    <li><a href="/my_reports">My Reports</a></li>
+    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+</ul>
+    </nav>
+
+    
+    <section class="hero">
+        <h1>Building Smarter & Cleaner Cities with AI</h1>
+
+        <p>
+            Report garbage dumps, potholes, drainage overflow,
+            waterlogging, and civic issues directly from your locality.
+        </p>
+
+        <div class="hero-buttons">
+    <a href="{{ url_for('report') }}" class="btn-primary">
+        📸 Report an Issue
+    </a>
+
+    <a href="{{ url_for('dashboard') }}" class="btn-secondary">
+        📊 View Dashboard
+    </a>
+
+    <a href="{{ url_for('track') }}" class="btn-secondary">
+        🔍 Track Complaint
+    </a>
+</div>
+    </section>
+
+    
+    <section class="stats">
+
+    <div class="card">
+        <h2 id="homeTotalReports">0</h2>
+        <p>Reports Submitted</p>
+    </div>
+
+    <div class="card">
+        <h2 id="homeResolvedReports">0</h2>
+        <p>Issues Resolved</p>
+    </div>
+
+    <div class="card">
+        <h2 id="homeAIAccuracy">95%</h2>
+        <p>AI Accuracy</p>
+    </div>
+
+    <div class="card">
+        <h2 id="homeCitizens">0</h2>
+        <p>Citizens Engaged</p>
+    </div>
+
+</section>
+
+    \
+    <section class="features">
+        <h2>Key Features</h2>
+
+        <div class="feature-container">
+
+            <div class="feature-card">
+                <h3>🤖 AI Detection</h3>
+                <p>
+                    Automatically identify garbage, potholes,
+                    drainage overflow and other civic issues.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3>📍 Smart Location Tracking</h3>
+                <p>
+                    Capture and map issue locations for faster action.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3>📊 Real-Time Dashboard</h3>
+                <p>
+                    Monitor complaints, progress and resolutions.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <h3>🌱 Environmental Impact</h3>
+                <p>
+                    Encourage cleaner communities and citizen engagement.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    
+    <section class="how-it-works">
+        <h2>How CivicEye AI Works</h2>
+
+        <div class="steps">
+
+            <div class="step">
+                <h3>1️⃣ Upload</h3>
+                <p>Citizen uploads a photo or video.</p>
+            </div>
+
+            <div class="step">
+                <h3>2️⃣ AI Analysis</h3>
+                <p>AI identifies the issue category.</p>
+            </div>
+
+            <div class="step">
+                <h3>3️⃣ Report Generated</h3>
+                <p>Complaint ID is created automatically.</p>
+            </div>
+
+            <div class="step">
+                <h3>4️⃣ Resolution</h3>
+                <p>Authorities review and resolve the issue.</p>
+            </div>
+
+        </div>
+    </section>
+
+    
+    <footer>
+        <p>© 2026 CivicEye AI | AI for Sustainable Communities</p>
+    </footer>
+
+<script>
+
+fetch("/get_stats")
+.then(response => response.json())
+.then(data => {
+
+    document.getElementById(
+        "homeTotalReports"
+    ).textContent =
+        data.total_reports;
+
+    document.getElementById(
+        "homeResolvedReports"
+    ).textContent =
+        data.resolved_reports;
+
+    document.getElementById(
+        "homeCitizens"
+    ).textContent =
+        data.citizens_engaged;
+
+    document.getElementById(
+        "homeAIAccuracy"
+    ).textContent =
+        data.ai_accuracy + "%";
+
+});
+
+</script>
+
+</body>
+</html>
