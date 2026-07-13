@@ -4,6 +4,7 @@ __pycache__/
 venv/
 .venv/
 .vscode/
+.env
 
 # Ignore uploaded images
 static/uploads/

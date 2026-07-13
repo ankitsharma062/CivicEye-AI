@@ -2,11 +2,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, request, jsonify, session, redirect
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from dotenv import load_dotenv
 import os
 import sqlite3
 
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = "civiceye_secret_key"
+
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "dev-secret-key"
+)
 
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
