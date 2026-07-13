@@ -4,6 +4,10 @@
 
 CivicEye AI is an intelligent web-based platform that enables citizens to report civic infrastructure problems using images. The system leverages Artificial Intelligence to automatically classify reported issues, capture location details, visualize complaints on interactive maps, and provide authorities with analytics for efficient decision-making.
 
+## 🌐 Live Demo
+
+👉 **Try CivicEye AI Live:** https://civiceye-ai-rfgx.onrender.com
+
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![Flask](https://img.shields.io/badge/Framework-Flask-black)
 ![HTML5](https://img.shields.io/badge/Frontend-HTML5-E34F26)
