@@ -4,6 +4,20 @@
 
 CivicEye AI is an intelligent web-based platform that enables citizens to report civic infrastructure problems using images. The system leverages Artificial Intelligence to automatically classify reported issues, capture location details, visualize complaints on interactive maps, and provide authorities with analytics for efficient decision-making.
 
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![Flask](https://img.shields.io/badge/Framework-Flask-black)
+![HTML5](https://img.shields.io/badge/Frontend-HTML5-E34F26)
+![CSS3](https://img.shields.io/badge/Style-CSS3-1572B6)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E)
+![SQLite](https://img.shields.io/badge/Database-SQLite-green)
+![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-AI-orange)
+![Teachable Machine](https://img.shields.io/badge/Google-Teachable%20Machine-4285F4)
+![Chart.js](https://img.shields.io/badge/Charts-Chart.js-red)
+![Leaflet.js](https://img.shields.io/badge/Maps-Leaflet-199900)
+![OpenStreetMap](https://img.shields.io/badge/Map%20Tiles-OpenStreetMap-7EBC6F)
+![Git](https://img.shields.io/badge/Version%20Control-Git-F05032)
+![GitHub](https://img.shields.io/badge/Repository-GitHub-181717)
+
 ---
 
 # 📌 Table of Contents
@@ -271,43 +285,124 @@ http://127.0.0.1:5000
 
 ## 🏠 Home Page
 
-(Add Screenshot)
+### Hero Section
+
+<p align="center">
+  <img src="screenshots/home1.png" alt="Home Page Hero" width="900">
+</p>
+
+### Features & Workflow
+
+<p align="center">
+  <img src="screenshots/home2.png" alt="Home Page Features" width="900">
+</p>
+
+---
+
+## 🔐 Login Page
+
+<p align="center">
+  <img src="screenshots/login.png" alt="Login Page" width="900">
+</p>
+
+---
+
+## 🆕 Registration Page
+<p align="center">
+  <img src="screenshots/register.png" alt="Registration Page" width="900">
+</p>
 
 ---
 
 ## 📝 Complaint Submission
 
-(Add Screenshot)
+<p align="center">
+  <img src="screenshots/report_issue.png" alt="Complaint Submission" width="900">
+</p>
 
 ---
 
 ## 🤖 AI Prediction
 
-(Add Screenshot)
+<p align="center">
+  <img src="screenshots/AI_Prediction.png" alt="AI Prediction" width="900">
+</p>
+
+---
+
+## 📋 My Reports
+
+<p align="center">
+  <img src="screenshots/tracking.png" alt="My Reports" width="900">
+</p>
+
+---
+
+## 👤 User Profile
+
+<p align="center">
+  <img src="screenshots/profile.png" alt="User Profile" width="900">
+</p>
 
 ---
 
 ## 📍 Interactive Map
 
-(Add Screenshot)
+<p align="center">
+  <img src="screenshots/map.png" alt="Interactive Map" width="900">
+</p>
 
 ---
 
 ## 📊 Analytics Dashboard
 
-(Add Screenshot)
+### Analytics Overview
+
+<p align="center">
+  <img src="screenshots/analytics1.png" alt="Analytics Dashboard - Overview" width="900">
+</p>
+
+### Analytics Insights
+
+<p align="center">
+  <img src="screenshots/analytics2.png" alt="Analytics Dashboard - Insights" width="900">
+</p>
+
+---
+
+## 📈 Civic Dashboard
+
+<p align="center">
+  <img src="screenshots/dashboard.png" alt="Civic Dashboard" width="900">
+</p>
 
 ---
 
 ## 👨‍💼 Admin Dashboard
 
-(Add Screenshot)
+### Admin Control Center
+
+<p align="center">
+  <img src="screenshots/admin1.png" alt="Admin Dashboard - Control Center" width="900">
+</p>
+
+### Complaint Management & Statistics
+
+<p align="center">
+  <img src="screenshots/admin2.png" alt="Admin Dashboard - Complaint Management" width="900">
+</p>
 
 ---
 
-## 🔥 Heatmap
+## 🔥 Complaint Heatmap
 
-(Add Screenshot)
+<p align="center">
+  <img src="screenshots/Heatmap.png" alt="Complaint Heatmap" width="900">
+</p>
+
+<p align="center">
+  <em>AI-powered heatmap highlighting civic issue hotspots across the city for improved resource allocation and faster response.</em>
+</p>
 
 ---
 
