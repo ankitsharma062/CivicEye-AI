@@ -5,6 +5,8 @@ from datetime import datetime
 from dotenv import load_dotenv
 import os
 import sqlite3
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 load_dotenv()
 
@@ -14,6 +16,15 @@ app.secret_key = os.environ.get(
     "SECRET_KEY",
     "dev-secret-key"
 )
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+
+def get_db_connection():
+    return psycopg2.connect(
+        DATABASE_URL,
+        cursor_factory=RealDictCursor
+    )
 
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
